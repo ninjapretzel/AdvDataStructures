@@ -1,52 +1,70 @@
 ﻿using System;
 
-namespace lheap {
-	public class LHeap<T> where T: IComparable<T> {
-		public class Node {
-			internal int npl;
-			internal T value;
-			internal Node left;
-			internal Node right;
-			internal Node() { npl = 0; value = default(T); left = right = null; }
-			public Node(T t) { npl = 1; value = t; left = right = SENTINEL; }
-			public static implicit operator Node(T val) { return new Node(val); }
-			public static implicit operator T(Node n) { return n.value; }
+class Program {
+	static void Main(string[] args) {
+		LHeap<int> ints = new LHeap<int>();
+		Random r = new Random();
+		for (int i = 0; i < 100; i++) {
+			ints.Insert(1000 + r.Next(9000));
 		}
-		public static void swap(ref Node a, ref Node b) { var c = a; a=b; b=c; }
-		public static Node SENTINEL = new Node();
-		public static Node Union(Node a, Node b) {
-			if (a == SENTINEL) { return b; }
-			if (b == SENTINEL) { return a; }
-			if (a.value.CompareTo(b.value) > 0) { swap(ref a, ref b); }
-			a.right = Union(a.right, b);
-			if (a.left.npl < a.right.npl) { swap(ref a.right, ref a.left); }
-			a.npl = 1 + a.right.npl;
-			return a;
-		}
-		Node root;
-		public LHeap() { root = SENTINEL; }
-		public void Insert(T t) { root = Union(root, t); }
-		public T ExtractMin() {
-			T ret = root;
-			// if (root.left.value.CompareTo(root.right.value) > 0) { swap(ref root.left, ref root.right); }
-			root = Union(root.left, root.right);
-			return ret;
-		}
-		public T Min { get { return root; } }
-		public bool IsEmpty { get { return root == SENTINEL; } }
-	}
 
-	class Program {
-		static void Main(string[] args) {
-			LHeap<int> ints = new LHeap<int>();
-			Random r = new Random();
-			for (int i = 0; i < 100; i++) {
-				ints.Insert(1000 + r.Next(9000));
-			}
-
-			while (!ints.IsEmpty) {
-				Console.WriteLine(ints.ExtractMin());
-			}
+		while (!ints.IsEmpty) {
+			Console.WriteLine(ints.ExtractMin());
 		}
 	}
+}
+
+/// <summary> Leftist heap: A heap that's fast and mergable, albiet with a heavy bias </summary>
+/// <typeparam name="T"> Generic type of contents </typeparam>
+public class LHeap<T> where T: IComparable<T> {
+	/// <summary> Fairly standard binary tree node class for holding heap contents  </summary>
+	internal class Node {
+		/// <summary> "Weight" value (null pointer length, distance to null) </summary>
+		internal int npl;
+		/// <summary> Node contents </summary>
+		internal T value;
+		/// <summary> Left (heavy) side </summary>
+		internal Node left;
+		/// <summary> Right (light) side </summary>
+		internal Node right;
+		/// <summary> Sentinel constructor </summary>
+		internal Node() { npl = 0; value = default(T); left = right = null; }
+		/// <summary> Data constructor </summary>
+		internal Node(T t) { npl = 1; value = t; left = right = SENTINEL; }
+		/// <summary> Automatic conversion from <see cref="T"/> to <see cref="LHeap{T}.Node"/> </summary>
+		public static implicit operator Node(T val) { return new Node(val); }
+		/// <summary> Automatic conversion from <see cref="LHeap{T}.Node"/> to <see cref="T"/> </summary>
+		public static implicit operator T(Node n) { return n.value; }
+	}
+	/// <summary> Swap references (to save a few lines of code) </summary>
+	internal static void swap(ref Node a, ref Node b) { var c = a; a=b; b=c; }
+	/// <summary> Single object for null-sentinel node </summary>
+	internal static readonly Node SENTINEL = new Node();
+	/// <summary> Union two trees into a single tree. </summary>
+	internal static Node Union(Node a, Node b) {
+		if (a == SENTINEL) { return b; }
+		if (b == SENTINEL) { return a; }
+		if (a.value.CompareTo(b.value) > 0) { swap(ref a, ref b); }
+		a.right = Union(a.right, b);
+		if (a.left.npl < a.right.npl) { swap(ref a.right, ref a.left); }
+		a.npl = 1 + a.right.npl;
+		return a;
+	}
+	/// <summary> Root of the heap </summary>
+	internal Node root;
+	/// <summary> Construct empty tree </summary>
+	public LHeap() { root = SENTINEL; }
+	/// <summary> Insert a given value into the tree </summary>
+	public void Insert(T t) { root = Union(root, t); }
+	/// <summary> Remove the minimum value from the tree </summary>
+	public T ExtractMin() {
+		T ret = root;
+		// if (root.left.value.CompareTo(root.right.value) > 0) { swap(ref root.left, ref root.right); }
+		root = Union(root.left, root.right);
+		return ret;
+	}
+	/// <summary> Peek at the minimum node </summary>
+	public T Min { get { return root; } }
+	/// <summary> Test if tree is empty </summary>
+	public bool IsEmpty { get { return root == SENTINEL; } }
 }
