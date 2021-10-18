@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lheap", "lheap.csproj", "{B908824D-BC2F-4879-AB10-801540EF1C5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B908824D-BC2F-4879-AB10-801540EF1C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B908824D-BC2F-4879-AB10-801540EF1C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B908824D-BC2F-4879-AB10-801540EF1C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B908824D-BC2F-4879-AB10-801540EF1C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B1A8DE97-CA75-4163-BAD2-D7DC7854D288}
+	EndGlobalSection
+EndGlobal
