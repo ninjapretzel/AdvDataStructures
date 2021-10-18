@@ -1,6 +1,36 @@
 ﻿using System;
 using System.Text;
 
+class Program {
+	static void Main(string[] args) {
+		Console.Clear();
+		VEBTree.Name n = (12, 4);
+
+		//Console.WriteLine(""+n);
+		//Console.WriteLine(""+n.high);
+		//Console.WriteLine(""+n.low);
+
+		var t = new VEBTree(16);
+		int[] data = new int[] { 2, 3, 4, 5, 7, 14, 15 };
+		Console.WriteLine("Initial Tree: ");
+		Console.WriteLine(t);
+		for (int i = 0; i < data.Length; i++) {
+			Console.WriteLine($"Inserting {data[i]}...");
+			t.Insert(data[i]);
+		}
+		Console.WriteLine(t);
+		for (int k = 0; k < 16; k++) {
+			Console.WriteLine($"is {k} a member? {t.Member(k)}");
+		}
+
+		int[,] twoD = new int[2, 5];
+		twoD[1, 4] = 3;
+		twoD[0, 2] = 5;
+
+
+	}
+}
+
 /// <summary> Class that holds an implementation of a log(log(n)) Van Emde Boas Tree </summary>
 public class VEBTree {
 	/// <summary> Helper to generate masks with <paramref name="nbits"/> bits</summary>
@@ -261,34 +291,3 @@ public class VEBTree {
 	/// <inheritdoc/>
 	public override string ToString() { return $"Root: {root.ToString()}"; }
 }
-
-class Program {
-	static void Main(string[] args) {
-		Console.Clear();
-		VEBTree.Name n = (12, 4);
-
-		//Console.WriteLine(""+n);
-		//Console.WriteLine(""+n.high);
-		//Console.WriteLine(""+n.low);
-
-		var t = new VEBTree(16);
-		int[] data = new int[] { 2, 3, 4, 5, 7, 14, 15 };
-		Console.WriteLine("Initial Tree: ");
-		Console.WriteLine(t);
-		for (int i = 0; i < data.Length; i++) {
-			Console.WriteLine($"Inserting {data[i]}...");
-			t.Insert(data[i]);
-		}
-		Console.WriteLine(t);
-		for (int k = 0; k < 16; k++) {
-			Console.WriteLine($"is {k} a member? {t.Member(k)}");
-		}
-
-		int[,] twoD = new int[2, 5];
-		twoD[1, 4] = 3;
-		twoD[0, 2] = 5;
-
-
-	}
-}
-
