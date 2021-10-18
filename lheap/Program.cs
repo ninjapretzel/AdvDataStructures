@@ -3,14 +3,36 @@
 class Program {
 	static void Main(string[] args) {
 		LHeap<int> ints = new LHeap<int>();
+		int n = 1000000;
+		DateTime a, b;
+		Console.WriteLine($"Generating some {n} values...");
 		Random r = new Random();
-		for (int i = 0; i < 100; i++) {
-			ints.Insert(1000 + r.Next(9000));
+		int[] ns = new int[n];
+		a = DateTime.UtcNow;
+		for (int i = 0; i < n; i++) {
+			ns[i] = 10000 + r.Next(90000);
 		}
+		b = DateTime.UtcNow;
+		double ms() { return (b-a).TotalMilliseconds; }
 
-		while (!ints.IsEmpty) {
-			Console.WriteLine(ints.ExtractMin());
+		Console.WriteLine($"...done generating in {ms()}ms...\nInserting them into a heap...");
+		a = DateTime.UtcNow;
+		for (int i = 0; i < n; i++) {
+			ints.Insert(ns[i]);
 		}
+		b = DateTime.UtcNow;
+		
+		Console.WriteLine($"...done Inserting in {ms()}ms...\nRemoving values from heap...");
+		int last = 0;
+		a = DateTime.UtcNow;
+		while (!ints.IsEmpty) {
+			int val = ints.ExtractMin();
+			// Console.Write();
+			if (val < last) { Console.WriteLine($"Vals {last} -> {val} are out of order!"); }
+			last = val;
+		}
+		b = DateTime.UtcNow;
+		Console.WriteLine($"...done removing in {ms()}ms");
 	}
 }
 
