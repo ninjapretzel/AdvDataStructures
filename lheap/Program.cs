@@ -33,6 +33,13 @@ class Program {
 		}
 		b = DateTime.UtcNow;
 		Console.WriteLine($"...done removing in {ms()}ms");
+
+		Console.WriteLine("QUIZ PART:")
+		Console.WriteLine($"Making 'optimal' tree of length 10 ");
+		for (int i = 0; i < 10; i++) {
+			ints.Insert(10 - i); // 10, 9, 8, ... 2, 1;
+		}
+		Console.WriteLine(ints);
 	}
 }
 
@@ -41,7 +48,7 @@ class Program {
 public class LHeap<T> where T: IComparable<T> {
 	/// <summary> Fairly standard binary tree node class for holding heap contents  </summary>
 	internal class Node {
-		/// <summary> "Weight" value (null pointer length, distance to null) </summary>
+		/// <summary> "Weight" value (null path length, shortest distance to a null child) </summary>
 		internal int npl;
 		/// <summary> Node contents </summary>
 		internal T value;
@@ -57,6 +64,14 @@ public class LHeap<T> where T: IComparable<T> {
 		public static implicit operator Node(T val) { return new Node(val); }
 		/// <summary> Automatic conversion from <see cref="LHeap{T}.Node"/> to <see cref="T"/> </summary>
 		public static implicit operator T(Node n) { return n.value; }
+		public override string ToString() { return ToString(0, "\t"); }
+		public string ToString(int ident, string identStr) {
+			string indent = ""; for (int i = 0; i < ident; i++) { indent += identStr; }
+			if (this == SENTINEL) { return $"{indent}{{NULL}}"; }
+			return $"{indent}Node: {value} / npl={npl}" +
+				$"\n{left.ToString(ident+1, identStr)}" +
+				$"\n{right.ToString(ident+1, identStr)}";
+		}
 	}
 	/// <summary> Swap references (to save a few lines of code) </summary>
 	internal static void swap(ref Node a, ref Node b) { var c = a; a=b; b=c; }
@@ -89,4 +104,5 @@ public class LHeap<T> where T: IComparable<T> {
 	public T Min { get { return root; } }
 	/// <summary> Test if tree is empty </summary>
 	public bool IsEmpty { get { return root == SENTINEL; } }
+	public override string ToString() { return root.ToString(); }
 }
