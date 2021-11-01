@@ -7,19 +7,29 @@ namespace splaytree {
 
 		static void Main(string[] args) {
 			Console.Clear();
-			SplayTree<int> t = new SplayTree<int>();
+			SplayTree<int> t = new SplayTree<int>(int.MaxValue);
 			int max = 10;
 			for (int i = 0; i <= max; i++) {
 				t.Insert(i);
 			}
-			Console.WriteLine($"Initialized Tree={t}");
+			Console.WriteLine($"Initialized Tree=\n{t}");
 			for (int i = 0; i <= max/2; i++) {
 				bool foundi = t.Find(i);
 				bool foundmaxi = t.Find(max - i);
 				Console.WriteLine($"Found {i}: {foundi}");
 				Console.WriteLine($"Found {max - i}: {foundmaxi}");
 			}
-			Console.WriteLine($"After many finds={t}");
+			Console.WriteLine($"After many finds=\n{t}");
+
+			Console.WriteLine($"Deleting a 3, {t.Delete(3)}");
+			Console.WriteLine($"Tree is now=\n{t}");
+			Console.WriteLine($"Deleting a 3, {t.Delete(3)}");
+			Console.WriteLine($"Tree is now=\n{t}");
+
+			//Console.WriteLine($"Deleting a 7, {t.Delete(7)}");
+			//Console.WriteLine($"Tree is now=\n{t}");
+			//Console.WriteLine($"Deleting a 7, {t.Delete(7)}");
+			//Console.WriteLine($"Tree is now=\n{t}");
 
 		}
 
@@ -46,25 +56,16 @@ namespace splaytree {
 				string indent = "";
 				for (int i = 0; i < ident; i++) { indent += identStr; }
 
-				str.Append(indent);
-				str.Append("Value:"); 
-				str.Append(value);
-				str.Append("\n"); 
-				str.Append(indent);
-				str.Append("Parent:"); 
+				str.Append($"{indent}Value:{value}\n{indent}Parent:");
 				str.Append((parent!=null)?parent.value.ToString():"(null)");
 
 				if (left != null) { 
-					str.Append("\n"); 
-					str.Append(indent); 
-					str.Append("Left:\n"); 
+					str.Append($"\n{indent}Left:\n");
 					left.ToString(ident+1, identStr, str); 
 					str.Append("\n"); 
 				} else { str.Append($"\n{indent}Left: (null)"); }
 				if (right != null) { 
-					str.Append("\n"); 
-					str.Append(indent); 
-					str.Append("Right:\n"); 
+					str.Append($"\n{indent}Right:\n"); 
 					right.ToString(ident+1, identStr, str); 
 					str.Append("\n");
 				} else { str.Append($"\n{indent}Right: (null)"); }
@@ -74,26 +75,24 @@ namespace splaytree {
 		}
 
 		public Node root;
-		public SplayTree() {
+		private T max;
+		public SplayTree(T max) {
+			this.max = max;
 			root = null;
 		}
 
 		static void swap(ref Node a, ref Node b) { var c = a; a = b; b = c; }
 
-		private Node Union(Node a, Node b) {
-			
-			return null;
-		}
 		
 		public bool Find(T val) {
-			root = Splay(val);
+			Splay(val);
 			return (val.CompareTo(root.value) == 0);
 		}
 
 		public void Insert(T val) {
 			if (root == null) { root = val; }
 			else {
-				root = Splay(val);
+				Splay(val);
 				Node r = val;
 				root.parent = r;
 				if (val.CompareTo(root) < 0) {
@@ -106,12 +105,20 @@ namespace splaytree {
 		}
 
 		public bool Delete(T val) {
-			root = Splay(val);
+			Splay(val);
 			if (val.CompareTo(root) == 0) {
 				root = Union(root.left, root.right);
 				return true;
 			}
 			return false;
+		}
+
+		private Node Union(Node a, Node b) {
+			Node z = Splay(max, a);
+			z.right = b;
+			b.parent = z;
+
+			return z;
 		}
 
 		public static void Rotate(Node x) {
@@ -155,11 +162,10 @@ namespace splaytree {
 			}
 		}
 		
-		public Node Splay(T val, Node root = null) {
-			
-			if (root == null) { root = this.root; }
-			if (!root) { return root; }
-
+		public Node Splay(T val) {
+			return root = Splay(val, root);
+		}
+		public static Node Splay(T val, Node root = null) {
 			Node x = root;
 			while (true) {
 				int cmp = val.CompareTo(x.value);
